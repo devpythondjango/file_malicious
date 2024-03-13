@@ -40,47 +40,6 @@ def aniqlash(fayl_nom):
 if __name__ == "__main__":
     files = os.listdir()
     #bizda mavjud fayl
-    for i in files:
-        fayl_nom = i
+    for fayl_nom in files:
+        fayl_nom = os.path.join(fayl_nom)
         aniqlash(fayl_nom)
-        
-    
-# import fitz  # PyMuPDF kutubxonasini o'rnating
-
-# def read_pdf(file_path):
-#     with fitz.open(file_path) as pdf_document:
-#         text = ""
-#         for page_num in range(pdf_document.page_count):
-#             page = pdf_document[page_num]
-#             text += page.get_text()
-#     return text
-
-# pdf_content = read_pdf("fayl.pdf")
-# print(pdf_content)
-
-# from docx import Document
-
-# def read_docx(file_path):
-#     doc = Document(file_path)
-#     text = ""
-#     for paragraph in doc.paragraphs:
-#         text += paragraph.text + "\n"
-#     return text
-
-# docx_content = read_docx("fayl.docx")
-# print(docx_content)
-
-
-# from pptx import Presentation
-
-# def read_pptx(file_path):
-#     prs = Presentation(file_path)
-#     text = ""
-#     for slide in prs.slides:
-#         for shape in slide.shapes:
-#             if hasattr(shape, "text"):
-#                 text += shape.text + "\n"
-#     return text
-
-# pptx_content = read_pptx("fayl.pptx")
-# print(pptx_content)

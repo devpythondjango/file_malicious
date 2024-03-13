@@ -46,6 +46,8 @@ def file_choose():
     file_path = filedialog.askopenfilename()
     if file_path:
         aniqlash(file_path)
+    elif file_path:
+        file_size(file_path)
 
 # Tkinter main window
 
@@ -70,7 +72,7 @@ button_frame.pack(side=tk.RIGHT, fill=tk.X)
 btn_quit = tk.Button(button_frame, text='Chiqish', command=root.destroy, bg='red', fg='white')
 btn_quit.pack(side=tk.LEFT, padx=10, pady=5)
 
-btn_scan = tk.Button(button_frame, text='Skaner qilish', command=aniqlash, bg='blue', fg='white')
+btn_scan = tk.Button(button_frame, text='Skaner qilish', command=file_choose, bg='blue', fg='white')
 btn_scan.pack(side=tk.LEFT, padx=10, pady=5)
 
 root.mainloop()
