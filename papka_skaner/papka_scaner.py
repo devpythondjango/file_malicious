@@ -44,6 +44,17 @@ def skaner():
         skaner_window = tk.Toplevel(root)
         skaner_window.title("Skaner Natijalari")
 
+        # Scrollbar qo'shish
+        scrollbar = tk.Scrollbar(skaner_window)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Natijalarni chiqarish uchun Text maydonchasi
+        natijalar_text = tk.Text(skaner_window, yscrollcommand=scrollbar.set)
+        natijalar_text.pack(expand=True, fill=tk.BOTH)
+
+        # Scrollbar va Textni bog'lash
+        scrollbar.config(command=natijalar_text.yview)
+
         for fayl_nom in os.listdir(selected_folder):
             fayl_nom = os.path.join(selected_folder, fayl_nom)
             hajmi, qatorlar_soni, zararli = aniqlash(fayl_nom)
@@ -53,9 +64,13 @@ def skaner():
             natija_str += f"Hajmi: {hajmi} bayt\n"
             natija_str += f"Qatorlar soni: {qatorlar_soni}\n"
             natija_str += "Xavfli" if zararli else "Xavfsiz"
-            natija_label = tk.Label(skaner_window, text=natija_str)
-            natija_label.pack()
+            natija_str += "\n\n"
+            natijalar_text.insert(tk.END, natija_str)
 
+        # Fayllarni chiqarish tugmasi
+        chiqarish_btn = tk.Button(skaner_window, text="Chiqarish", command=skaner_window.destroy)
+        chiqarish_btn.pack()
+        
         messagebox.showinfo("Tugma bosilganda", "Fayllar skanlandi va natijalar chiqarildi.")
     else:
         messagebox.showwarning("Diqqat", "Iltimos, avval 'Papka' tugmasini bosing va papkani tanlang.")
@@ -83,5 +98,12 @@ btn_skaner.pack(side=tk.LEFT, padx=10)
 
 btn_ochirish = tk.Button(frame, text="Chiqish", command=root.destroy)
 btn_ochirish.pack(side=tk.LEFT, padx=10)
+
+root.geometry("300x150")
+root.configure(bg="lightgray")
+frame.configure(bg="lightgray")
+btn_papka.configure(bg="white")
+btn_skaner.configure(bg="white")
+btn_ochirish.configure(bg="white")
 
 root.mainloop()
