@@ -39,7 +39,7 @@ def aniqlash(fayl_nom):
 
 if __name__ == "__main__":
     files = os.listdir()
-    # #bizda mavjud fayl
+    #bizda mavjud fayl
     for i in files:
         fayl_nom = i
         aniqlash(fayl_nom)

